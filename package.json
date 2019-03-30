@@ -1,0 +1,17 @@
+{
+  "name": "RoadToReact",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnthonyJCampbell/road-to-react.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnthonyJCampbell/road-to-react/issues"
+  },
+  "homepage": "https://github.com/AnthonyJCampbell/road-to-react#readme"
+}
