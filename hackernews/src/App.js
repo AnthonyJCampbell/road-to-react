@@ -5,9 +5,6 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      list,
-    }
     const list = [
       {
         title: 'React',
@@ -26,11 +23,18 @@ class App extends Component {
         objectID: 1,
       },
     ];
+    this.state = {
+      list,
+    }
+  }
+
+  onDismiss = (id) => {
+    const isNotID = item => item.objectID !== id;
+    const updatedList = this.state.list.filter(isNotID)
+    this.setState({ list: updatedList })
   }
 
   render() {
-
-
     return (
       <div className="App">
         {this.state.list.map(item => 
@@ -41,6 +45,15 @@ class App extends Component {
               <span>{item.author}</span>
               <span>{item.num_comments}</span>
               <span>{item.points}</span>
+
+              <span>
+                <button 
+                  type="button"
+                  onClick={() => 
+                    this.onDismiss(item.objectID)}>
+                  Dismiss
+                </button>
+              </span>
             </div>
         )}
       </div>
