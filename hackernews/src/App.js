@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 
+const isSearched = searchTerm =>item => {
+  return item.title.toLowerCase().includes(searchTerm.toLowerCase())
+}
+
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +30,7 @@ class App extends Component {
     ];
     this.state = {
       list,
+      searchTerm: '',
     }
   }
 
@@ -34,10 +40,24 @@ class App extends Component {
     this.setState({ list: updatedList })
   }
 
+  onSearchChange = (e) => {
+    this.setState({
+      searchTerm: e.target.value
+    })
+  }
+
   render() {
     return (
       <div className="App">
-        {this.state.list.map(item => 
+        <form>
+          <input
+            type="text"
+            onChange={this.onSearchChange}
+          />
+        </form>
+        {this.state.list
+          .filter(isSearched(this.state.searchTerm))
+          .map(item => 
             <div key={item.objectID}>
               <span>
                 <a href={item.url}>{item.title}</a>
