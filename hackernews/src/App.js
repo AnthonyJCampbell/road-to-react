@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import Search from './Components/Search';
 import Table from './Components/Table';
 
+// Stlying
+import './App.css'
 
 class App extends Component {
   constructor(props) {
@@ -48,13 +50,15 @@ class App extends Component {
   render() {
     const { searchTerm, list } = this.state;
     return (
-      <div className="App">
-        <Search
-          value={searchTerm}
-          onChange={this.onSearchChange}
-        >
-          Search
-        </Search>
+      <div className="page">
+        <div className="interactions">
+          <Search className="interactions"
+            value={searchTerm}
+            onChange={this.onSearchChange}
+          >
+            Search
+          </Search>
+        </div>
         <Table 
           list={list}
           pattern={searchTerm}
