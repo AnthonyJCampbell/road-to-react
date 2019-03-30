@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 
 class App extends Component {
-  render() {
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      list,
+    }
     const list = [
       {
         title: 'React',
@@ -22,10 +26,14 @@ class App extends Component {
         objectID: 1,
       },
     ];
+  }
+
+  render() {
+
 
     return (
       <div className="App">
-        {list.map(item => 
+        {this.state.list.map(item => 
             <div key={item.objectID}>
               <span>
                 <a href={item.url}>{item.title}</a>
