@@ -7,8 +7,7 @@ const isSearched = searchTerm =>item => {
   return item.title.toLowerCase().includes(searchTerm.toLowerCase())
 }
 
-const Table = (props) => {
-  const { list, pattern, onDismiss } = props;
+const Table = ({ list, pattern, onDismiss }) => {
   return (
     <div>
       {list
