@@ -7,31 +7,20 @@ import Table from './Components/Table';
 // Stlying
 import './App.css'
 
+// API REQUEST SET-UP
+const DEFAULT_QUERY = 'redux';
+
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
+
 class App extends Component {
   constructor(props) {
     super(props);
 
-    const list = [
-      {
-        title: 'React',
-        url: 'https://facebook.github.io/react',
-        author: 'Jordan Walke',
-        num_comments: 3,
-        points: 4,
-        objectID: 0,
-      },
-      {
-        title: 'Redux',
-        url: 'https://github.com/reactjs/redux',
-        author: 'Dan Abramov, Andrew Clark',
-        num_comments: 2,
-        points: 5,
-        objectID: 1,
-      },
-    ];
     this.state = {
-      list,
-      searchTerm: '',
+      result: null,
+      searchTerm: DEFAULT_QUERY
     }
   }
 
@@ -47,8 +36,23 @@ class App extends Component {
     })
   }
 
+  setSearchTopStories = result => {
+    this.setState({ result})
+  }
+
+  // LIFECYLCE METHODS
+
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}}`)
+      .then(res => res.json())
+      .then(res => this.setSearchTopStories(res))
+      .catch(err => err)
+  }
+
   render() {
-    const { searchTerm, list } = this.state;
+    const { searchTerm, result } = this.state;
+    if (!result) { return null; }
     return (
       <div className="page">
         <div className="interactions">
@@ -60,7 +64,7 @@ class App extends Component {
           </Search>
         </div>
         <Table 
-          list={list}
+          list={result.hits}
           pattern={searchTerm}
           onDismiss={this.onDismiss}
         />
