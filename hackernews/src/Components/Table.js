@@ -3,10 +3,6 @@ import React from 'react';
 // Components
 import Button from './Button'
 
-const isSearched = searchTerm =>item => {
-  return item.title.toLowerCase().includes(searchTerm.toLowerCase())
-}
-
 const largeColumn = {
   width: '40%',
 }
@@ -17,11 +13,10 @@ const smallColumn = {
   width: '10%',
 }
 
-const Table = ({ list, pattern, onDismiss }) => {
+const Table = ({ list, onDismiss }) => {
   return (
     <div className="table">
       {list
-        .filter(isSearched(pattern))
         .map(item => 
           <div 
             className="table-row"
