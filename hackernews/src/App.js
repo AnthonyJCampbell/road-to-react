@@ -42,14 +42,24 @@ class App extends Component {
     this.setState({ result})
   }
 
-  // LIFECYLCE METHODS
-
-  componentDidMount() {
-    const { searchTerm } = this.state;
+  fetchSearchTopStories = searchTerm => {
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}}`)
       .then(res => res.json())
       .then(res => this.setSearchTopStories(res))
       .catch(err => err)
+  }
+
+  onSearchSubmit = (e) => {
+    const { searchTerm } = this.state
+    this.fetchSearchTopStories(searchTerm)
+    e.preventDefault();
+  }
+
+  // LIFECYLCE METHODS
+
+  componentDidMount() {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm)
   }
 
   render() {
@@ -61,15 +71,17 @@ class App extends Component {
           <Search className="interactions"
             value={searchTerm}
             onChange={this.onSearchChange}
+            onSubmit={this.onSearchSubmit}
           >
             Search
           </Search>
         </div>
-        <Table 
-          list={result.hits}
-          pattern={searchTerm}
-          onDismiss={this.onDismiss}
-        />
+        {result &&
+          <Table 
+            list={result.hits}
+            onDismiss={this.onDismiss}
+          />
+        }
       </div>
     );
   }
