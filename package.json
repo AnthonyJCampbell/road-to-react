@@ -13,5 +13,8 @@
   "bugs": {
     "url": "https://github.com/AnthonyJCampbell/road-to-react/issues"
   },
-  "homepage": "https://github.com/AnthonyJCampbell/road-to-react#readme"
+  "homepage": "https://github.com/AnthonyJCampbell/road-to-react#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }
