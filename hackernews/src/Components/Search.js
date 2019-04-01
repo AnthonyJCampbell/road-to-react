@@ -15,7 +15,7 @@ const Search = ({
             value={value}
             onChange={onChange}
           />
-          <Button type="submit">
+          <Button type="submit" onClick={onSubmit}>
             {children}
           </Button>
       </form>
