@@ -20,6 +20,8 @@ const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
 class App extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -88,6 +90,7 @@ class App extends Component {
   // LIFECYLCE METHODS
 
   componentDidMount() {
+    this._isMounted = true;
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm })
     this.fetchSearchTopStories(searchTerm)
@@ -124,6 +127,10 @@ class App extends Component {
         </div>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 }
 
