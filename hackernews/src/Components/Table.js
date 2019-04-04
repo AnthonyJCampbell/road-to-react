@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { sortBy } from 'lodash';
 
 // Components
 import Button from './Button'
@@ -14,11 +15,60 @@ const smallColumn = {
   width: '10%',
 }
 
-const Table = ({ list, onDismiss }) => {
+const SORTS = {
+  NONE: list => list,
+  TITLE: list => sortBy(list, 'title'),
+  AUTHOR: list => sortBy(list, 'author'),
+  COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+  POINTS: list => sortBy(list, 'points').reverse(),
+}
+
+const Sort = ({ sortKey, onSort, children }) => {
+  return (
+    <Button onClick={() => onSort(sortKey)} className="button-inline" >
+      {children}
+    </Button>
+  )
+}
+
+const Table = ({ list, onDismiss, onSort, sortKey }) => {
   return (
     <div className="table">
-      {list
-        .map(item => 
+          <div className="table-header">
+            <span style={{ width: '40%' }}>
+              <Sort
+                sortKey='TITLE'
+                onSort={onSort}>
+                Title
+              </Sort>
+            </span>
+            <span style={{ width: '30%' }}>
+              <Sort
+                sortKey='AUTHOR'
+                onSort={onSort}>
+                Author
+              </Sort>
+            </span>
+            <span style={{ width: '10%' }}>
+              <Sort
+                sortKey='COMMENTS'
+                onSort={onSort}>
+                Comments
+              </Sort>
+            </span>
+            <span style={{ width: '10%' }}>
+              <Sort
+                sortKey='POINTS'
+                onSort={onSort}>
+                Points
+              </Sort>
+            </span>
+            <span style={{ width: '10%'}}>
+              Archive
+            </span>
+          </div>
+          {SORTS[sortKey](list)
+            .map(item => 
           <div 
             className="table-row"
             key={item.objectID}  

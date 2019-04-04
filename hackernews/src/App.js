@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { sortBy } from 'axios';
 
 // Components
 import Search from './Components/Search';
@@ -19,6 +20,14 @@ const PARAM_SEARCH = 'query=';
 const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
+const SORTS = {
+  NONE: list => list,
+  TITLE: list => sortBy(list, 'title'),
+  AUTHOR: list => sortBy(list, 'author'),
+  COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+  POINTS: list => sortBy(list, 'points').reverse(),
+}
+
 class App extends Component {
   _isMounted = false;
 
@@ -30,7 +39,8 @@ class App extends Component {
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
       error: null,
-      isLoading: false
+      isLoading: false,
+      sortKey: 'NONE'
     }
   }
 
@@ -90,6 +100,9 @@ class App extends Component {
     return !this.state.results[searchTerm]
   }
 
+  onSort = (sortKey) => {
+    this.setState({ sortKey })
+  }
 
   // LIFECYLCE METHODS
   componentDidMount() {
@@ -100,7 +113,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading, sortKey } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
     
@@ -121,6 +134,8 @@ class App extends Component {
             <Table 
               list={list}
               onDismiss={this.onDismiss}
+              sortKey={sortKey}
+              onSort={this.onSort}
             />
           }
         <div className="interactions">
