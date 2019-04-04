@@ -35,9 +35,9 @@ class Search extends Component {
 
 Search.propTypes = {
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   children: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func
 }
 
 export default Search;

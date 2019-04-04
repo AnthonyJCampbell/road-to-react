@@ -4,7 +4,7 @@ import axios from 'axios';
 // Components
 import Search from './Components/Search';
 import Table from './Components/Table';
-import Button from './Components/Button';
+import Button, { ButtonWithLoading} from './Components/Button';
 
 // Stlying
 import './App.css'
@@ -103,7 +103,7 @@ class App extends Component {
     const { searchTerm, results, searchKey, error, isLoading } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
-    const Loading = () => <div>Loading...</div>
+    
     return (
       <div className="page">
         <div className="interactions">
@@ -124,14 +124,11 @@ class App extends Component {
             />
           }
         <div className="interactions">
-          {
-            isLoading ?
-            <Loading />
-            :
-            <Button onClick={() => this.fetchSearchTopStories(searchKey, page+1)} >
+          <ButtonWithLoading 
+            isLoading={isLoading}
+            onClick={() => this.fetchSearchTopStories(searchKey, page+1)}>
               More
-            </Button>
-          }
+            </ButtonWithLoading>
         </div>
       </div>
     );
