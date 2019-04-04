@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { sortBy } from 'axios';
 
 // Components
 import Search from './Components/Search';
 import Table from './Components/Table';
-import Button, { ButtonWithLoading} from './Components/Button';
+import { ButtonWithLoading} from './Components/Button';
 
 // Stlying
 import './App.css'
@@ -20,14 +19,6 @@ const PARAM_SEARCH = 'query=';
 const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
-const SORTS = {
-  NONE: list => list,
-  TITLE: list => sortBy(list, 'title'),
-  AUTHOR: list => sortBy(list, 'author'),
-  COMMENTS: list => sortBy(list, 'num_comments').reverse(),
-  POINTS: list => sortBy(list, 'points').reverse(),
-}
-
 class App extends Component {
   _isMounted = false;
 
@@ -40,7 +31,8 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       error: null,
       isLoading: false,
-      sortKey: 'NONE'
+      sortKey: 'NONE',
+      isSortReverse: false,
     }
   }
 
@@ -101,7 +93,8 @@ class App extends Component {
   }
 
   onSort = (sortKey) => {
-    this.setState({ sortKey })
+    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse
+    this.setState({ sortKey, isSortReverse })
   }
 
   // LIFECYLCE METHODS
@@ -113,7 +106,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading, sortKey } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
     
@@ -134,6 +127,7 @@ class App extends Component {
             <Table 
               list={list}
               onDismiss={this.onDismiss}
+              isSortReverse={isSortReverse}
               sortKey={sortKey}
               onSort={this.onSort}
             />

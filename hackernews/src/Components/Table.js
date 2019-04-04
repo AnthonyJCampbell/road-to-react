@@ -23,28 +23,41 @@ const SORTS = {
   POINTS: list => sortBy(list, 'points').reverse(),
 }
 
-const Sort = ({ sortKey, onSort, children }) => {
+const Sort = ({ sortKey, onSort, children, activeSortKey }) => {
+  const sortClass = ['button-inline'];
+
+  if (sortKey === activeSortKey) {
+    sortClass.push('button-active')
+  }
   return (
-    <Button onClick={() => onSort(sortKey)} className="button-inline" >
+    <Button onClick={() => onSort(sortKey)} 
+      className={sortClass.join(' ')}>
       {children}
     </Button>
   )
 }
 
-const Table = ({ list, onDismiss, onSort, sortKey }) => {
+const Table = ({ list, onDismiss, onSort, sortKey, isSortReverse }) => {
+  const sortedList = SORTS[sortKey](list)
+  const reverseSortedList = isSortReverse 
+    ? sortedList.reverse() 
+    : sortedList
   return (
     <div className="table">
           <div className="table-header">
             <span style={{ width: '40%' }}>
               <Sort
                 sortKey='TITLE'
-                onSort={onSort}>
+                onSort={onSort}
+                activeSortKey={sortKey}
+                >
                 Title
               </Sort>
             </span>
             <span style={{ width: '30%' }}>
               <Sort
                 sortKey='AUTHOR'
+                activeSortKey={sortKey}
                 onSort={onSort}>
                 Author
               </Sort>
@@ -52,6 +65,7 @@ const Table = ({ list, onDismiss, onSort, sortKey }) => {
             <span style={{ width: '10%' }}>
               <Sort
                 sortKey='COMMENTS'
+                activeSortKey={sortKey}
                 onSort={onSort}>
                 Comments
               </Sort>
@@ -59,6 +73,7 @@ const Table = ({ list, onDismiss, onSort, sortKey }) => {
             <span style={{ width: '10%' }}>
               <Sort
                 sortKey='POINTS'
+                activeSortKey={sortKey}
                 onSort={onSort}>
                 Points
               </Sort>
@@ -67,27 +82,30 @@ const Table = ({ list, onDismiss, onSort, sortKey }) => {
               Archive
             </span>
           </div>
-          {SORTS[sortKey](list)
-            .map(item => 
-          <div 
-            className="table-row"
-            key={item.objectID}  
-            >
-            <span style={largeColumn}>
-              <a href={item.url}>{item.title}</a>
-            </span>
-            <span style={mediumColumn}>{item.author}</span>
-            <span style={smallColumn}>{item.num_comments}</span>
-            <span style={smallColumn}>{item.points}</span>
+        {reverseSortedList.map(item => 
+          {if(item.title) {
+            return (
+              <div 
+                className="table-row"
+                key={item.objectID}  
+                >
+                <span style={largeColumn}>
+                  <a href={item.url}>{item.title}</a>
+                </span>
+                <span style={mediumColumn}>{item.author}</span>
+                <span style={smallColumn}>{item.num_comments}</span>
+                <span style={smallColumn}>{item.points}</span>
 
-            <span style={smallColumn}>
-              <Button 
-                className="button-inline"
-                onClick={() => onDismiss(item.objectID)}>
-                Dismiss
-              </Button>
-            </span>
-          </div>
+                <span style={smallColumn}>
+                  <Button 
+                    className="button-inline"
+                    onClick={() => onDismiss(item.objectID)}>
+                    Dismiss
+                  </Button>
+                </span>
+              </div>
+            )
+          }}
         )}
     </div>
   );
