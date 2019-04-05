@@ -4,7 +4,7 @@ import axios from 'axios';
 // Components
 import Search from './Components/Search';
 import Table from './Components/Table';
-import Button from './Components/Button';
+import { ButtonWithLoading} from './Components/Button';
 
 // Stlying
 import './App.css'
@@ -29,7 +29,10 @@ class App extends Component {
       results: null,
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
-      error: null
+      error: null,
+      isLoading: false,
+      sortKey: 'NONE',
+      isSortReverse: false,
     }
   }
 
@@ -63,11 +66,13 @@ class App extends Component {
       results: { 
         ...results, 
         [searchKey]: { hits: updatedHits, page}
-      }
+      },
+      isLoading: false
     })
   }
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
+    this.setState({isLoading: true})
     axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(result => this._isMounted && this.setSearchTopStories(result.data))
       .catch(error => this._isMounted && this.setState({error}))
@@ -87,8 +92,12 @@ class App extends Component {
     return !this.state.results[searchTerm]
   }
 
-  // LIFECYLCE METHODS
+  onSort = (sortKey) => {
+    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse
+    this.setState({ sortKey, isSortReverse })
+  }
 
+  // LIFECYLCE METHODS
   componentDidMount() {
     this._isMounted = true;
     const { searchTerm } = this.state;
@@ -97,7 +106,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
     
@@ -118,12 +127,17 @@ class App extends Component {
             <Table 
               list={list}
               onDismiss={this.onDismiss}
+              isSortReverse={isSortReverse}
+              sortKey={sortKey}
+              onSort={this.onSort}
             />
           }
         <div className="interactions">
-          <Button onClick={() => this.fetchSearchTopStories(searchKey, page+1)} >
-            More
-          </Button>
+          <ButtonWithLoading 
+            isLoading={isLoading}
+            onClick={() => this.fetchSearchTopStories(searchKey, page+1)}>
+              More
+            </ButtonWithLoading>
         </div>
       </div>
     );
