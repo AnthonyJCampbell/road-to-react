@@ -56,16 +56,17 @@ class App extends Component {
 
   setSearchTopStories = result => {
     const { hits, page } = result;
-    const { searchKey, results } = this.state;
-    // Returns the previous list of hits, stored in state (before the new one get passed), if we're on page > 1. Else, just return an empty array.
-    const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
-    const updatedHits = [...oldHits, ...hits]
-    this.setState({ 
-      results: { 
-        ...results, 
-        [searchKey]: { hits: updatedHits, page}
-      },
-      isLoading: false
+    this.setState(prevState => {
+      const { searchKey, results } = prevState;
+      const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
+      const updatedHits = [...oldHits, ...hits]
+      return {
+        results: {
+          ...results,
+          [searchKey]: {hits: updatedHits, page}
+        },
+        isLoading: false
+      }
     })
   }
 
