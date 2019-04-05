@@ -31,8 +31,6 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       error: null,
       isLoading: false,
-      sortKey: 'NONE',
-      isSortReverse: false,
     }
   }
 
@@ -92,10 +90,6 @@ class App extends Component {
     return !this.state.results[searchTerm]
   }
 
-  onSort = (sortKey) => {
-    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse
-    this.setState({ sortKey, isSortReverse })
-  }
 
   // LIFECYLCE METHODS
   componentDidMount() {
@@ -106,7 +100,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
     
@@ -127,9 +121,6 @@ class App extends Component {
             <Table 
               list={list}
               onDismiss={this.onDismiss}
-              isSortReverse={isSortReverse}
-              sortKey={sortKey}
-              onSort={this.onSort}
             />
           }
         <div className="interactions">
