@@ -31,8 +31,6 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       error: null,
       isLoading: false,
-      sortKey: 'NONE',
-      isSortReverse: false,
     }
   }
 
@@ -58,16 +56,17 @@ class App extends Component {
 
   setSearchTopStories = result => {
     const { hits, page } = result;
-    const { searchKey, results } = this.state;
-    // Returns the previous list of hits, stored in state (before the new one get passed), if we're on page > 1. Else, just return an empty array.
-    const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
-    const updatedHits = [...oldHits, ...hits]
-    this.setState({ 
-      results: { 
-        ...results, 
-        [searchKey]: { hits: updatedHits, page}
-      },
-      isLoading: false
+    this.setState(prevState => {
+      const { searchKey, results } = prevState;
+      const oldHits = results && results[searchKey] ? results[searchKey].hits : [];
+      const updatedHits = [...oldHits, ...hits]
+      return {
+        results: {
+          ...results,
+          [searchKey]: {hits: updatedHits, page}
+        },
+        isLoading: false
+      }
     })
   }
 
@@ -92,10 +91,6 @@ class App extends Component {
     return !this.state.results[searchTerm]
   }
 
-  onSort = (sortKey) => {
-    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse
-    this.setState({ sortKey, isSortReverse })
-  }
 
   // LIFECYLCE METHODS
   componentDidMount() {
@@ -106,7 +101,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchTerm, results, searchKey, error, isLoading, sortKey, isSortReverse } = this.state;
+    const { searchTerm, results, searchKey, error, isLoading } = this.state;
     const page = (results && results[searchKey] && results[searchKey].page) || 0;
     const list = ( results && results[searchKey] && results[searchKey].hits) || [];
     
@@ -127,9 +122,6 @@ class App extends Component {
             <Table 
               list={list}
               onDismiss={this.onDismiss}
-              isSortReverse={isSortReverse}
-              sortKey={sortKey}
-              onSort={this.onSort}
             />
           }
         <div className="interactions">
